@@ -77,6 +77,7 @@ print_info() {
     # info "GPU Driver" gpu_driver  # Linux/macOS only
     # info "Disk" disk
     # info "Battery" battery
+    # info "AC Charger" ac
     # info "Font" font
     # info "Song" song
     # [[ "$player" ]] && prin "Music Player" "$player"
@@ -3844,6 +3845,16 @@ get_battery() {
         "bar")     battery="$(bar "${battery/\%*}" 100)" ;;
         "infobar") battery="${battery} $(bar "${battery/\%*}" 100)" ;;
         "barinfo") battery="$(bar "${battery/\%*}" 100)${info_color} ${battery}" ;;
+    esac
+}
+
+get_ac() {
+    case $os in
+        "Mac OS X" | "macOS")
+            wattage=$(system_profiler SPPowerDataType | grep "Wattage" | cut -d: -f 2 | xargs)
+            [[ "$wattage" ]] && ac="${wattage}W"
+             
+        ;;
     esac
 }
 
